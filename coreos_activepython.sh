@@ -1,12 +1,13 @@
 #!/bin/bash -uxe
 
+# Path to this script: https://raw.githubusercontent.com/SeanSingh/coreos/master/coreos_activepython.sh
 VERSION=3.6.0.3600
-PACKAGE=ActivePython-${VERSION}-linux-x86_64-glibc-2.12-402695
+GLIBC_VER=2.3.6-40183
+PACKAGE=ActivePython-${VERSION}-linux-x86_64-glibc-${GLIBC_VER}
 
 # make directory
 mkdir -p /opt/bin
 cd /opt
-
 wget http://downloads.activestate.com/ActivePython/releases/${VERSION}/${PACKAGE}.tar.gz
 tar -xzvf ${PACKAGE}.tar.gz
 
