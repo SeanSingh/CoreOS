@@ -1,0 +1,33 @@
+#cloud-config
+users:
+ - name: sysadmin
+#To generate an ecrypted password use: sudo openssl passwd -1
+   passwd: $1$hJlXMh.Q$IYj1BUVP6xepbfFzm9h790
+   groups:
+    - sudo
+    - docker
+   ssh-authorized-keys:
+    - "ssh-rsa ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQChf1t/yKxAhZ77CNH6Mp7xU9Y1t7bw6VUy4x4g8dTcOdImTndMHz5OAaDnGLX9VS5/ZRoEYhAya60tlUtVgiIWLRmoBXuepVwhzAwDKiny6ps6UB9u0w0mZK3vLer3Bvm4bbKH5sWK0Fz5hnL89IRG4visJDYoUxnWdnlbvw93ylWHpXc1wwsJmdz1e9lvcZx7BTK2hWHxIna6OphKxC7Uc8lv5i+UD3lVTOKYim2h0hqVeS9QB2RGKQXCXQLFw0c1pwtxfdFy5P2hscKA3zvOn7hbOP1xDgaAwWZ5X+PYa/UN9ojzWJ0mgW3biE11/vC3XfBF+/zMyNA2O78b0+Vz"
+
+  # This config is meant to be consumed by the config transpiler, which will
+  # generate the corresponding Ignition config. Do not pass this config directly
+  # to instances of Container Linux.
+etcd:
+  # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=3
+  # specify the initial size of your cluster with ?size=X
+  discovery: https://discovery.etcd.io/<token>
+  advertise_client_urls: http://<PEER_ADDRESS>:2379,http://<PEER_ADDRESS>:4001
+  initial_advertise_peer_urls: http://<PEER_ADDRESS>:2380
+  # listen on both the official ports and the legacy ports
+  # legacy ports can be omitted if your application doesn't depend on them
+  listen_client_urls: http://0.0.0.0:2379,http://0.0.0.0:4001
+  listen_peer_urls: http://<PEER_ADDRESS>:2380
+systemd:
+  units:
+    - name: flanneld.service
+      enable: true
+      dropins:
+      - name: 50-network-config.conf
+        contents: |
+          [Service]
+          ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{"Network":"10.1.0.0/16", "Backend": {"Type": "vxlan"}}'
