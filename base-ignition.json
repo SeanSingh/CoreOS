@@ -1,0 +1,43 @@
+{
+  "ignition": {
+    "config": {},
+    "timeouts": {},
+    "version": "2.1.0"
+  },
+  "networkd": {},
+  "passwd": {
+    "users": [
+      {
+        "name": "coreadmin",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQChf1t/yKxAhZ77CNH6Mp7xU9Y1t7bw6VUy4x4g8dTcOdImTndMHz5OAaDnGLX9VS5/ZRoEYhAya60tlUtVgiIWLRmoBXuepVwhzAwDKiny6ps6UB9u0w0mZK3vLer3Bvm4bbKH5sWK0Fz5hnL89IRG4visJDYoUxnWdnlbvw93ylWHpXc1wwsJmdz1e9lvcZx7BTK2hWHxIna6OphKxC7Uc8lv5i+UD3lVTOKYim2h0hqVeS9QB2RGKQXCXQLFw0c1pwtxfdFy5P2hscKA3zvOn7hbOP1xDgaAwWZ5X+PYa/UN9ojzWJ0mgW3biE11/vC3XfBF+/zMyNA2O78b0+Vz"
+        ]
+      }
+    ]
+  },
+  "storage": {},
+  "systemd": {
+    "units": [
+      {
+        "dropins": [
+          {
+            "contents": "[Service]\nExecStart=\nExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \\\n  --listen-peer-urls=\"http://\u003cPEER_ADDRESS\u003e:2380\" \\\n  --listen-client-urls=\"http://0.0.0.0:2379,http://0.0.0.0:4001\" \\\n  --initial-advertise-peer-urls=\"http://\u003cPEER_ADDRESS\u003e:2380\" \\\n  --advertise-client-urls=\"http://\u003cPEER_ADDRESS\u003e:2379,http://\u003cPEER_ADDRESS\u003e:4001\" \\\n  --discovery=\"https://discovery.etcd.io/\u003ctoken\u003e\"",
+            "name": "20-clct-etcd-member.conf"
+          }
+        ],
+        "enable": true,
+        "name": "etcd-member.service"
+      },
+      {
+        "dropins": [
+          {
+            "contents": "[Service]\nExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{\"Network\":\"10.1.0.0/16\", \"Backend\": {\"Type\": \"vxlan\"}}'",
+            "name": "50-network-config.conf"
+          }
+        ],
+        "enable": true,
+        "name": "flanneld.service"
+      }
+    ]
+  }
+}
