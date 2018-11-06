@@ -556,7 +556,7 @@ function install_from_url() {
 
     echo "Downloading, writing and verifying ${IMAGE_NAME}..."
     if ! wget --no-verbose -O - "${IMAGE_URL}" \
-        | tee >(bzip2 -cd >&3) \
+        | tee > (bzip2 -cd >&3) \
         | gpg --batch --trusted-key "${GPG_LONG_ID}" \
             --verify "${WORKDIR}/${SIG_NAME}" -
     then
