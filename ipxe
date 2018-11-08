@@ -1,0 +1,6 @@
+\#\!ipxe
+
+set base-url http://stable.release.core-os.net/amd64-usr/current
+kernel ${base-url}/coreos\_production\_pxe.vmlinuz initrd=coreos\_production\_pxe\_image.cpio.gz coreos.first\_boot=1 coreos.config.url=https://raw.githubusercontent.com/SeanSingh/coreos/master/minimal-ignition.json
+initrd ${base-url}/coreos\_production\_pxe\_image.cpio.gz
+boot
