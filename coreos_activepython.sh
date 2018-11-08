@@ -15,7 +15,7 @@ mv ${PACKAGE} apy && cd apy && ./install.sh -I /opt/python/
 printf "%s\n%s" "#! /usr/bin/bash" | sudo tee -a /etc/profile.d/opt-path.sh
 printf "%s\n%s" "PATH=\$PATH:/opt/bin:/opt/pypy/bin:/opt/python/bin" | sudo tee -a /etc/profile.d/opt-path.sh
 sudo chmod +x /etc/profile.d/opt-path.sh
-
+sudo rm /opt/${PACKAGE}.tar.gz
 sudo ln -sf /opt/python/bin/easy_install /opt/bin/easy_install
 sudo ln -sf /opt/python/bin/pip3 /opt/bin/pip3
 sudo ln -sf /opt/python/bin/pip3 /opt/bin/pip
